@@ -1,97 +1,120 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
 
-const User = require("../models/user.js");
 const Comic = require("../models/comic");
 
-// INDEX - show all shelf items
+// INDEX - My Shelf (signed-in user's comics) + optional search by title/author
 router.get("/", async (req, res) => {
   try {
-    const user = await User.findById(req.session.user._id);
-    if (!user) return res.status(404).send("User not found");
+    const userId = req.session.user._id;
 
-    const shelfItems = user.shelf;
+    const q = (req.query.q || "").trim();
 
-    res.render("comics/index.ejs", { shelf: shelfItems, user });
+    const filter = { user: userId };
+
+    if (q) {
+      // case-insensitive partial match on title OR author
+      filter.$or = [
+        { title: { $regex: q, $options: "i" } },
+        { author: { $regex: q, $options: "i" } },
+      ];
+    }
+
+    const comics = await Comic.find(filter).sort({ createdAt: -1 });
+
+    // pass q back so your input can stay filled after searching
+    res.render("comics/index.ejs", { comics, q });
   } catch (err) {
     console.error(err);
     res.redirect("/");
   }
 });
 
-// NEW - display form to add a new comic item
+// NEW
 router.get("/new", (req, res) => {
-  res.render("comics/new.ejs", { userId: req.params.userId });
+  res.render("comics/new.ejs");
 });
 
-// Create - add new comic to Shelf
+// CREATE
 router.post("/", async (req, res) => {
   try {
-    const user = await User.findById(req.session.user._id);
-    if (!user) return res.status(404).send("User not found");
+    await Comic.create({
+      user: req.session.user._id,
+      title: req.body.title,
+      author: req.body.author,
+      issueNumber: req.body.issueNumber,
+      imageUrl: req.body.imageUrl,
+      condition: req.body.condition,
+      estimatedValue: req.body.estimatedValue,
+      notes: req.body.notes,
+    });
 
-    user.shelf.push({ name: req.body.name });
-
-    await user.save();
-
-    res.redirect(`/users/${req.session.user._id}/comics`);
+    res.redirect("/comics");
   } catch (err) {
     console.error(err);
     res.redirect("/");
   }
 });
 
-// DELETE - remove a comic item from the shelf
-router.delete("/:itemId", async (req, res) => {
+// EDIT
+router.get("/:comicId/edit", async (req, res) => {
   try {
-    const user = await User.findById(req.session.user._id);
-    if (!user) return res.status(404).send("User not found");
+    const comic = await Comic.findOne({
+      _id: req.params.comicId,
+      user: req.session.user._id,
+    });
 
-    const comic = user.shelf.id(req.params.itemId);
-
-    comic.deleteOne();
-
-    await user.save();
-
-    res.redirect(`/users/${req.session.user._id}/comics`);
-  } catch (err) {
-    console.log(err);
-    res.redirect("/");
-  }
-});
-
-// EDIT - show form to edit a shelf item
-router.get("/:itemId/edit", async (req, res) => {
-  try {
-    const user = await User.findById(req.session.user._id);
-    if (!user) return res.status(404).send("User not found");
-
-    const comicItem = user.shelf.id(req.params.itemId);
-    if (!comicItem) return res.status(404).send("comic item not found");
-
-    res.render("applications/edit", { comic: comicItem, user });
-  } catch (err) {
-    console.error(err);
-    res.redirect("/");
-  }
-});
-
-// UPDATE - update a specific comic item
-router.put("/:itemId", async (req, res) => {
-  try {
-    const user = await User.findById(req.session.user._id);
-    if (!user) return res.status(404).send("User not found");
-
-    const comic = user.shelf.id(req.params.itemId);
     if (!comic) return res.status(404).send("Comic item not found");
 
-    comic.set({ name: req.body.name });
-
-    await user.save();
-
-    res.redirect(`/users/${user._id}/comics`);
+    res.render("comics/edit.ejs", { comic });
   } catch (err) {
     console.error(err);
+    res.redirect("/");
+  }
+});
+
+// UPDATE
+router.put("/:comicId", async (req, res) => {
+  try {
+    const comic = await Comic.findOne({
+      _id: req.params.comicId,
+      user: req.session.user._id,
+    });
+
+    if (!comic) return res.status(404).send("Comic item not found");
+
+    comic.set({
+      title: req.body.title,
+      author: req.body.author,
+      issueNumber: req.body.issueNumber,
+      imageUrl: req.body.imageUrl,
+      condition: req.body.condition,
+      estimatedValue: req.body.estimatedValue,
+      notes: req.body.notes,
+    });
+
+    await comic.save();
+
+    res.redirect("/comics");
+  } catch (err) {
+    console.error(err);
+    res.redirect("/");
+  }
+});
+
+// DELETE
+router.delete("/:comicId", async (req, res) => {
+  try {
+    const deleted = await Comic.findOneAndDelete({
+      _id: req.params.comicId,
+      user: req.session.user._id,
+    });
+
+    if (!deleted) return res.status(404).send("Comic item not found");
+
+    res.redirect("/comics");
+  } catch (err) {
+    console.log(err);
     res.redirect("/");
   }
 });

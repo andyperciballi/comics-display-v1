@@ -13,26 +13,35 @@ const comicSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      maxlength: 500,
+    },
+    author: {
+      type: String,
+      trim: true,
+      maxlength: 120,
     },
 
     issueNumber: {
       type: String,
       trim: true,
+      maxlength: 50,
     },
 
     imageUrl: {
       type: String,
       trim: true,
+      maxlength: 500,
     },
 
     condition: {
       type: String,
       enum: [
-        "Salvage",
         "Poor",
         "Fair",
         "Good",
+        "Very Good",
         "Fine",
+        "Very Fine",
         "Near Mint",
         "Mint",
       ],
@@ -42,12 +51,19 @@ const comicSchema = new mongoose.Schema(
     estimatedValue: {
       type: Number,
       min: 0,
+      max: 1000000, // arbitrary upper cap to prevent abuse
+    },
+
+    notes: {
+      type: String,
+      trim: true,
+      maxlength: 3000, // generous but safe (~½ page of text)
     },
   },
   { timestamps: true }
 );
 
-//prevent accidental duplicates per user
+// prevent duplicate issues per user
 comicSchema.index(
   { user: 1, title: 1, issueNumber: 1 },
   { unique: true }
