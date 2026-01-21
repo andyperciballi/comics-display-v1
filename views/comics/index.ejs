@@ -13,42 +13,76 @@
   <body>
     <%- include('../partials/_navbar.ejs') %>
 
-    <h1>My Shelf</h1>
+    <main class="shelf-container">
+      <h1 class="shelf-title">My Shelf</h1>
 
-    <div class="button-container">
-      <form
-        action="/users/<%= user._id %>/comics/new"
-        method="GET"
-        style="display: inline"
-      >
-        <button type="submit" class="add-button">Add New Item</button>
-      </form>
-    </div>
+      
+      <div class="search-container">
+        <form action="/users/<%= user._id %>/comics" method="GET" class="search-form">
+          <input 
+            type="text" 
+            name="q" 
+            placeholder="Search by title or author..." 
+            value="<%= q || '' %>"
+            class="search-input"
+          />
+          <button type="submit" class="search-button">Search</button>
+          <% if (q) { %>
+            <a href="/users/<%= user._id %>/comics" class="clear-search-link">Clear Search</a>
+          <% } %>
+        </form>
+      </div>
 
-    <ul>
-      <% if (Shelf.length === 0) { %>
-      <li>There are no items in this shelf.</li>
-      <% } else { %> <% shelf.forEach(item => { %>
-      <li>
-        <%= item.name %>
-
+      
+      <div class="add-comic-container">
         <form
-          action="/users/<%= user._id %>/comics/<%= item._id %>/edit"
+          action="/users/<%= user._id %>/comics/new"
           method="GET"
-          style="display: inline"
         >
-          <button class="edit-button" type="submit">Edit</button>
+          <button type="submit" class="add-comic-button">Add New Comic</button>
         </form>
+      </div>
 
-        <form
-          action="/users/<%= user._id %>/comics/<%= item._id %>?_method=DELETE"
-          method="POST"
-          style="display: inline"
-        >
-          <button class="delete-button" type="submit">Delete</button>
-        </form>
-      </li>
-      <% }) %> <% } %>
-    </ul>
+      
+      <ul class="comics-list">
+        <% if (comics.length === 0) { %>
+          <li class="empty-message">
+            No comics found. <% if (q) { %>Try a different search.<% } %>
+          </li>
+        <% } else { %>
+          <% comics.forEach(comic => { %>
+            <li class="comic-item">
+              <div class="comic-info">
+                <strong class="comic-title"><%= comic.title %></strong>
+                <% if (comic.issueNumber) { %>
+                  <span class="comic-issue">Issue #<%= comic.issueNumber %></span>
+                <% } %>
+                <% if (comic.author) { %>
+                  <span class="comic-author">by <%= comic.author %></span>
+                <% } %>
+              </div>
+
+              <div class="comic-actions">
+                <form
+                  action="/users/<%= user._id %>/comics/<%= comic._id %>/edit"
+                  method="GET"
+                  class="action-form"
+                >
+                  <button type="submit" class="edit-button">Edit</button>
+                </form>
+
+                <form
+                  action="/users/<%= user._id %>/comics/<%= comic._id %>?_method=DELETE"
+                  method="POST"
+                  class="action-form"
+                >
+                  <button type="submit" class="delete-button">Delete</button>
+                </form>
+              </div>
+            </li>
+          <% }) %>
+        <% } %>
+      </ul>
+    </main>
   </body>
 </html>
