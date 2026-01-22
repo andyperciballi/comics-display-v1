@@ -94,3 +94,352 @@ body {
   color: white;
   transform: translateY(-2px);
 }
+/* ===== NAVBAR ===== */
+nav {
+  background-color: #2d2d2d;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+nav a {
+  color: #e0e0e0;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+nav a:first-child {
+  font-size: 1.2rem;
+  color: #4a90e2;
+  margin-right: auto;
+}
+
+nav a:hover {
+  background-color: #3a3a3a;
+  color: #4a90e2;
+  transform: translateY(-2px);
+}
+
+nav a:last-child {
+  background-color: #d9534f;
+  color: white;
+}
+
+nav a:last-child:hover {
+  background-color: #c9302c;
+  color: white;
+}
+/* ===== AUTH PAGES (Sign In / Sign Up) ===== */
+.sign-fields {
+  max-width: 400px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: #2d2d2d;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.sign-fields h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #ffffff;
+}
+
+.sign-fields form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sign-fields label {
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.sign-fields input {
+  padding: 0.8rem;
+  border: 1px solid #444;
+  border-radius: 6px;
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+  font-size: 1rem;
+}
+
+.sign-fields input:focus {
+  outline: none;
+  border-color: #4a90e2;
+}
+
+.sign-in-button,
+.sign-up-button {
+  padding: 0.8rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.sign-in-button {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.sign-in-button:hover {
+  background-color: #357abd;
+}
+
+.sign-up-button {
+  background-color: #5cb85c;
+  color: white;
+}
+
+.sign-up-button:hover {
+  background-color: #4cae4c;
+}
+
+/* ===== COMIC DETAIL PAGE ===== */
+.comic-detail-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #2d2d2d;
+  border-radius: 8px;
+}
+
+.comic-detail-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.comic-cover-image {
+  max-width: 300px;
+  width: 100%;
+  border-radius: 8px;
+  margin: 0 auto 2rem;
+  display: block;
+}
+
+.detail-group {
+  margin-bottom: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #444;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #4a90e2;
+  margin-right: 0.5rem;
+}
+
+.detail-notes {
+  margin-top: 0.5rem;
+  color: #b0b0b0;
+}
+
+.comic-actions-detail {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.edit-button-large,
+.delete-button-large,
+.favorite-button-large {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.edit-button-large {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.delete-button-large {
+  background-color: #d9534f;
+  color: white;
+}
+
+.favorite-button-large {
+  background-color: #5cb85c;
+  color: white;
+}
+
+/* ===== FORMS (New/Edit) ===== */
+.form-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #2d2d2d;
+  border-radius: 8px;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #1a1a1a;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #e0e0e0;
+  margin-top: 0.5rem;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.submit-button {
+  padding: 0.8rem 2rem;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cancel-link {
+  padding: 0.8rem 2rem;
+  background-color: #666;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  text-align: center;
+}
+
+/* ===== SHELF/LIST PAGES ===== */
+.shelf-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.search-input {
+  padding: 0.8rem;
+  background-color: #2d2d2d;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #e0e0e0;
+  min-width: 300px;
+}
+
+.search-button, .add-comic-button {
+  padding: 0.8rem 1.5rem;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 1rem 0.5rem;
+}
+
+.comics-list {
+  list-style: none;
+  margin-top: 2rem;
+}
+
+.comic-item {
+  background-color: #2d2d2d;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comic-title-link {
+  color: #4a90e2;
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+.comic-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-button, .delete-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.edit-button {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.delete-button {
+  background-color: #d9534f;
+  color: white;
+}
+
+.unfavorite-button{
+    background-color: #d9534f;
+    color: white;
+    padding: 3px;
+}
+/* ===== BACK LINKS ===== */
+.back-link {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  background-color: #666;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.back-link:hover {
+  background-color: #555;
+}
+
+/* ===== COMMUNITY PAGE ===== */
+.users-list {
+  list-style: none;
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.users-list li {
+  background-color: #2d2d2d;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+}
+
+.users-list a {
+  color: #4a90e2;
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.users-list a:hover {
+  color: #357abd;
+}

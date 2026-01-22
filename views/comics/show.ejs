@@ -73,9 +73,11 @@
           </form>
 
           <a href="/users/<%= user._id %>/comics" class="back-link">Back to My Shelf</a>
-        <% } else { %>
+       <% } else { %>
           <!-- Non-owner sees Favorite button -->
-          <button class="favorite-button-large">Add to Favorites</button>
+          <form action="/users/<%= user._id %>/comics/<%= comic._id %>/favorite" method="POST" class="action-form-inline">
+            <button type="submit" class="favorite-button-large">Add to Favorites</button>
+          </form>
           <a href="/users/<%= comic.user %>/comics" class="back-link">Back to Their Shelf</a>
         <% } %>
       </div>

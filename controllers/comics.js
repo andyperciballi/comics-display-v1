@@ -33,7 +33,7 @@ router.get("/", async (req, res) => {
 // FAVORITES - Show user's favorited comics
 router.get("/favorites", async (req, res) => {
   try {
-    const Favorite = require("../models/favorites");
+    const Favorite = require("../models/favorite");
 
 
     console.log("FAVORITES route - User ID:", req.session.user._id);
@@ -157,15 +157,21 @@ router.delete("/:comicId", async (req, res) => {
   }
 });
 
-// FAVORITES - Add comic to favorites
+// FAVORITE - Add comic to favorites
 router.post("/:comicId/favorite", async (req, res) => {
   try {
     const Favorite = require("../models/favorite");
     
-    await Favorite.create({
+    console.log("FAVORITE route hit");
+    console.log("User ID:", req.session.user._id);
+    console.log("Comic ID:", req.params.comicId);
+    
+    const favorite = await Favorite.create({
       user: req.session.user._id,
       comic: req.params.comicId
     });
+
+    console.log("Favorite created:", favorite);
 
     res.redirect(`/users/${req.session.user._id}/comics/${req.params.comicId}`);
   } catch (err) {
