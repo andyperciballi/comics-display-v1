@@ -1,14 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon" type="image/png" href="/images/icon.png" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="/css/style.css" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home Page</title>
+  <title>Home - Comics Display</title>
 </head>
 
 <body>
   <%- include('./partials/_navbar.ejs') %>
-  <h1>Welcome to Comic Display </h1>
+  
+  <main class="home-container">
+    <div class="home-hero">
+      <img src="/images/logo.png" alt="Comics Display Logo" class="home-logo" />
+      <h1 class="home-title">Welcome to Comics Display</h1>
+      <p class="home-description">
+        Track your comic collection, explore the community, and discover new favorites.
+      </p>
+      
+      <% if (!user) { %>
+        <div class="home-cta">
+          <a href="/auth/sign-up" class="cta-button-primary">Get Started</a>
+          <a href="/auth/sign-in" class="cta-button-secondary">Sign In</a>
+        </div>
+      <% } else { %>
+        <div class="home-cta">
+          <a href="/users/<%= user._id %>/comics" class="cta-button-primary">View My Shelf</a>
+          <a href="/users" class="cta-button-secondary">Explore Community</a>
+        </div>
+      <% } %>
+
+      <p class="home-description">
+  Your personal comic book collection manager. Catalog your prized issues, track their condition and value, 
+  and connect with fellow collectors. Browse the community to discover amazing collections, favorite comics 
+  you admire, and share your own treasures with the world.
+</p>
+
+<% if (!user) { %>
+  <p class="home-subtext">
+    Sign up to start building your digital shelf, or sign in to access your collection.
+  </p>
+<% } else { %>
+  <p class="home-subtext">
+    Welcome back, <%= user.username %>! Ready to add some new issues or explore what others are collecting?
+  </p>
+<% } %>
+    </div>
+  </main>
 </body>
   
 </html>
