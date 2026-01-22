@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Favorites</title>
+  </head>
+  <body>
+    <%- include('../partials/_navbar.ejs') %>
+
+    <main class="shelf-container">
+      <h1 class="shelf-title">My Favorite Comics</h1>
+
+      <ul class="comics-list">
+        <% if (favorites.length === 0) { %>
+          <li class="empty-message">
+            You haven't favorited any comics yet. Explore the community to find some!
+          </li>
+        <% } else { %>
+          <% favorites.forEach(favorite => { %>
+            <li class="comic-item">
+              <div class="comic-info">
+                <a href="/users/<%= favorite.comic.user %>/comics/<%= favorite.comic._id %>" class="comic-title-link">
+                  <strong class="comic-title"><%= favorite.comic.title %></strong>
+                </a>
+                <% if (favorite.comic.issueNumber) { %>
+                  <span class="comic-issue">Issue #<%= favorite.comic.issueNumber %></span>
+                <% } %>
+                <% if (favorite.comic.author) { %>
+                  <span class="comic-author">by <%= favorite.comic.author %></span>
+                <% } %>
+              </div>
+
+              <!-- Quick Unfavorite Button -->
+              <div class="comic-actions">
+                <form 
+                  action="/users/<%= user._id %>/comics/<%= favorite.comic._id %>/unfavorite?_method=DELETE" 
+                  method="POST" 
+                  class="action-form"
+                >
+                  <button type="submit" class="unfavorite-button">Unfavorite</button>
+                </form>
+              </div>
+            </li>
+          <% }) %>
+        <% } %>
+      </ul>
+
+      <a href="/users/<%= user._id %>/comics" class="back-link">Back to My Shelf</a>
+    </main>
+  </body>
+</html>

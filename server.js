@@ -14,6 +14,7 @@ const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const morgan = require("morgan");
 const session = require("express-session");
+const MongoStore = require("connect-mongo").default;
 
 const comicsController = require("./controllers/comics.js");
 const authController = require("./controllers/auth.js");
@@ -33,13 +34,22 @@ mongoose.connection.on("connected", () => {
 });
 
 //middleware-------------------------------------------------------------
+app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method"));
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    store: new MongoStore({
+      mongoUrl: process.env.MONGODB_URI,
+      touchAfter: 24 * 3600
+    }),
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+    }
   })
 );
 
@@ -49,6 +59,22 @@ app.get("/", (req, res) => {
   res.render("index", {
     user: req.session.user,
   });
+});
+
+app.get("/test-comics", isSignedIn, async (req, res) => {
+  const Comic = require("./models/comic");
+  const comics = await Comic.find({ user: req.session.user._id });
+  res.json(comics);
+});
+
+app.get("/drop-comic-index", async (req, res) => {
+  const Comic = require("./models/comic");
+  try {
+    await Comic.collection.dropIndex("user_1_title_1_issueNumber_1");
+    res.send("Index dropped! Now you can have duplicate comics.");
+  } catch (err) {
+    res.send(`Error: ${err.message}`);
+  }
 });
 
 app.get("/vip-lounge", (req, res) => {

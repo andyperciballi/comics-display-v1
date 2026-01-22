@@ -64,9 +64,5 @@ const comicSchema = new mongoose.Schema(
 );
 
 // prevent duplicate issues per user
-comicSchema.index(
-  { user: 1, title: 1, issueNumber: 1 },
-  { unique: true }
-);
 
 module.exports = mongoose.model("Comic", comicSchema);

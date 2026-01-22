@@ -16,10 +16,15 @@ router.get('/', async (req, res) => {
 // SHOW – view a single user's Shelf
 router.get('/:id', async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).send('User not found');
+    const Comic = require('../models/comic');
+    
+    const profileUser = await User.findById(req.params.id);
+    if (!profileUser) return res.status(404).send('User not found');
 
-    res.render('users/show', { user });
+    // Get all comics for this user
+    const comics = await Comic.find({ user: req.params.id }).sort({ createdAt: -1 });
+
+    res.render('users/show', { profileUser, comics });
   } catch (err) {
     console.error(err);
     res.redirect('/');

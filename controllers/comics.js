@@ -30,15 +30,52 @@ router.get("/", async (req, res) => {
   }
 });
 
+// FAVORITES - Show user's favorited comics
+router.get("/favorites", async (req, res) => {
+  try {
+    const Favorite = require("../models/favorites");
+
+
+    console.log("FAVORITES route - User ID:", req.session.user._id);
+    
+    
+    const favorites = await Favorite.find({ user: req.session.user._id })
+      .populate('comic')
+      .sort({ createdAt: -1 });
+
+    res.render("comics/favorites.ejs", { favorites });
+  } catch (err) {
+    console.error("Error in FAVORITES route:", err);
+    res.redirect("/");
+  }
+});
+
 // NEW
 router.get("/new", (req, res) => {
   res.render("comics/new.ejs");
 });
 
+// SHOW - View single comic details
+router.get("/:comicId", async (req, res) => {
+  try {
+    const comic = await Comic.findById(req.params.comicId);
+    
+    if (!comic) return res.status(404).send("Comic not found");
+
+    res.render("comics/show.ejs", { comic });
+  } catch (err) {
+    console.error("Error in SHOW route:", err);
+    res.redirect("/");
+  }
+});
+
 // CREATE
 router.post("/", async (req, res) => {
   try {
-    await Comic.create({
+    console.log("Creating comic with data:", req.body);
+    console.log("User ID:", req.session.user._id);
+    
+    const comic = await Comic.create({
       user: req.session.user._id,
       title: req.body.title,
       author: req.body.author,
@@ -49,10 +86,11 @@ router.post("/", async (req, res) => {
       notes: req.body.notes,
     });
 
-    res.redirect("/comics");
+    console.log("Comic created successfully:", comic._id);
+    res.redirect(`/users/${req.session.user._id}/comics`);  // <-- This line is critical
   } catch (err) {
-    console.error(err);
-    res.redirect("/");
+    console.error("ERROR creating comic:", err);
+    res.status(500).send(`Error: ${err.message}`);
   }
 });
 
@@ -95,7 +133,7 @@ router.put("/:comicId", async (req, res) => {
 
     await comic.save();
 
-    res.redirect("/comics");
+    res.redirect(`/users/${req.session.user._id}/comics`);
   } catch (err) {
     console.error(err);
     res.redirect("/");
@@ -112,11 +150,46 @@ router.delete("/:comicId", async (req, res) => {
 
     if (!deleted) return res.status(404).send("Comic item not found");
 
-    res.redirect("/comics");
+    res.redirect(`/users/${req.session.user._id}/comics`);
   } catch (err) {
     console.log(err);
     res.redirect("/");
   }
 });
+
+// FAVORITES - Add comic to favorites
+router.post("/:comicId/favorite", async (req, res) => {
+  try {
+    const Favorite = require("../models/favorite");
+    
+    await Favorite.create({
+      user: req.session.user._id,
+      comic: req.params.comicId
+    });
+
+    res.redirect(`/users/${req.session.user._id}/comics/${req.params.comicId}`);
+  } catch (err) {
+    console.error("Error favoriting comic:", err);
+    res.redirect("/");
+  }
+});
+
+// UNFAVORITE - Remove comic from favorites
+router.delete("/:comicId/unfavorite", async (req, res) => {
+  try {
+    const Favorite = require("../models/favorite");
+    
+    await Favorite.findOneAndDelete({
+      user: req.session.user._id,
+      comic: req.params.comicId
+    });
+
+    res.redirect(`/users/${req.session.user._id}/comics/${req.params.comicId}`);
+  } catch (err) {
+    console.error("Error unfavoriting comic:", err);
+    res.redirect("/");
+  }
+});
+
 
 module.exports = router;

@@ -1,31 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= user.username %>'s Shelf</title>
-</head>
-<body>
-  <%- include('../partials/_navbar.ejs') %>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= profileUser.username %>'s Shelf</title>
+  </head>
+  <body>
+    <%- include('../partials/_navbar.ejs') %>
 
-  <h1><%= user.username %>'s Shelf</h1>
+    <main class="shelf-container">
+      <h1 class="shelf-title"><%= profileUser.username %>'s Shelf</h1>
 
-  <div class="button-container">
-    <form action="/users" method="GET" style="display:inline">
-      <button type="submit" class="community-button">Back to Community</button>
-    </form>
-  </div>
+      <ul class="comics-list">
+        <% if (comics.length === 0) { %>
+          <li class="empty-message">This shelf is empty.</li>
+        <% } else { %>
+          <% comics.forEach(comic => { %>
+            <li class="comic-item">
+              <div class="comic-info">
+                <a href="/users/<%= profileUser._id %>/comics/<%= comic._id %>" class="comic-title-link">
+                  <strong class="comic-title"><%= comic.title %></strong>
+                </a>
+                <% if (comic.issueNumber) { %>
+                  <span class="comic-issue">Issue #<%= comic.issueNumber %></span>
+                <% } %>
+                <% if (comic.author) { %>
+                  <span class="comic-author">by <%= comic.author %></span>
+                <% } %>
+              </div>
+            </li>
+          <% }) %>
+        <% } %>
+      </ul>
 
-  <ul class="shelf-list">
-    <% if(user.shelf.length === 0) { %>
-      <li>This Shelf is empty.</li>
-    <% } else { %>
-      <% user.shelf.forEach(item => { %>
-        <li><%= item.name %></li>
-      <% }) %>
-    <% } %>
-  </ul>
-</body>
+      <a href="/users" class="back-link">Back to Community</a>
+    </main>
+  </body>
 </html>
