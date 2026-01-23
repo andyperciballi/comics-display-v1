@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
 
     const comics = await Comic.find(filter).sort({ createdAt: -1 });
 
-    // pass q back so your input can stay filled after searching
+    // pass q back so input can stay filled after searching
     res.render("comics/index.ejs", { comics, q });
   } catch (err) {
     console.error(err);
@@ -34,11 +34,6 @@ router.get("/", async (req, res) => {
 router.get("/favorites", async (req, res) => {
   try {
     const Favorite = require("../models/favorite");
-
-
-    console.log("FAVORITES route - User ID:", req.session.user._id);
-    
-    
     const favorites = await Favorite.find({ user: req.session.user._id })
       .populate('comic')
       .sort({ createdAt: -1 });
@@ -72,9 +67,6 @@ router.get("/:comicId", async (req, res) => {
 // CREATE
 router.post("/", async (req, res) => {
   try {
-    console.log("Creating comic with data:", req.body);
-    console.log("User ID:", req.session.user._id);
-    
     const comic = await Comic.create({
       user: req.session.user._id,
       title: req.body.title,
@@ -85,8 +77,6 @@ router.post("/", async (req, res) => {
       estimatedValue: req.body.estimatedValue,
       notes: req.body.notes,
     });
-
-    console.log("Comic created successfully:", comic._id);
     res.redirect(`/users/${req.session.user._id}/comics`);  // <-- This line is critical
   } catch (err) {
     console.error("ERROR creating comic:", err);
@@ -152,7 +142,7 @@ router.delete("/:comicId", async (req, res) => {
 
     res.redirect(`/users/${req.session.user._id}/comics`);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.redirect("/");
   }
 });
@@ -162,16 +152,10 @@ router.post("/:comicId/favorite", async (req, res) => {
   try {
     const Favorite = require("../models/favorite");
     
-    console.log("FAVORITE route hit");
-    console.log("User ID:", req.session.user._id);
-    console.log("Comic ID:", req.params.comicId);
-    
     const favorite = await Favorite.create({
       user: req.session.user._id,
       comic: req.params.comicId
     });
-
-    console.log("Favorite created:", favorite);
 
     res.redirect(`/users/${req.session.user._id}/comics/${req.params.comicId}`);
   } catch (err) {
