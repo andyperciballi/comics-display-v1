@@ -77,7 +77,7 @@ router.post("/", async (req, res) => {
       estimatedValue: req.body.estimatedValue,
       notes: req.body.notes,
     });
-    res.redirect(`/users/${req.session.user._id}/comics`);  // <-- This line is critical
+    res.redirect(`/users/${req.session.user._id}/comics`);  
   } catch (err) {
     console.error("ERROR creating comic:", err);
     res.status(500).send(`Error: ${err.message}`);
