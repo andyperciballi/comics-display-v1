@@ -7,7 +7,7 @@
 ---
 
 ## App Name & Description
-**Comic Display** is a web application that allows users to upload, browse, and manage digital representations of their **physical comic book collections**. Users can add comics with cover images, search comics by title, filter by date, and view **their own comics** or **comics they have liked**. This means you can share your collection digitally without having to post it for sale.
+**Comic Display** is a web application that allows users to upload, browse, and manage digital representations of their **physical comic book collections**. Users can add comics with cover images, search comics by title/ author, and view **their own comics** or **comics they have liked**. This means you can share your collection digitally without having to post it for sale.
 
 The app functions as a **digital display collection** for real-world comic books (or your fantasy collection?), allowing collectors to showcase their collections without repeatedly handling, organizing and sorting physical items anywhere in the world from the cloud.
 
